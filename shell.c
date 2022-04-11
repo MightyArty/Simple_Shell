@@ -23,7 +23,20 @@ void check_location(char *loc){
  * 
  */
 void get_dir(){
-
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(".");
+    if (d){
+        while((dir == readdir(d)) != NULL){
+            printf("%s\n", dir->d_name);
+        }
+        closedir(d);
+    }
+    // if d == NULL
+    else {
+        printf("Error in reading directory!\n");
+        return;
+    }
 }
 
 int main(){
@@ -36,12 +49,14 @@ int main(){
         printf("%s>$", loc);    // pritnf current location
         gets(com);  // read the command
 
+        // return the string after ECHO command
         if(strncmp(com, "ECHO", 5) == 0){
             for(int i = 5 ; i < max_length && com[i] != '\0' ; i++){
                 printf("%c\n", com[i]);
             }
         }
 
+        // return list of files in the directory
         else if(strcmp(com, "DIR") == 0){
             get_dir();
         }
@@ -54,10 +69,12 @@ int main(){
 
         }
 
+        // if return 0 -> success
+        // else -> error
         else if(strncmp(com, "CD", 3) == 0){
             // chdir is a system command
             if(chdir(&(com[3])) != 0){
-                printf("error in accessing the directory...\n");
+                printf("error in changing directory...\n");
                 return 1;
             }
         }
@@ -82,6 +99,9 @@ int main(){
 
         // need to complete
         else{
+
+            // system is a system call function
+            // system(com);
             int situation = fork();
             if(situation == 0){
                 char first[max_length] = "/bin/";
