@@ -22,6 +22,7 @@ int main(){
     }
     printf("success in creating socket\n");
 
+    // do we need memset??
     add.sin_family = AF_INET;
     add.sin_port = PORT;
     add.sin_addr.s_addr = inet_addr(IP);
