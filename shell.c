@@ -3,8 +3,42 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h> 
+#include <arpa/inet.h>
 
 #define max_length 50
+
+
+
+#define BUFF_SIZE 1024
+
+char *IP = "localhost";
+int PORT = 5500;
+struct sockaddr_in add;
+socklen_t addr_size;
+char buff[BUFF_SIZE];
+
+void client(){
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if(sock < 0){
+        printf("error in connectiong...\n");
+        exit(1);
+    }
+    printf("success in creating socket\n");
+
+    // do we need memset??
+    add.sin_family = AF_INET;
+    add.sin_port = htons(9000);
+    add.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    connect(sock, (struct sock_addr*)&add, sizeof(add));
+    printf("connected to server on port: %d", PORT);
+    dup2(1,123);
+    dup2(sock,1);
+}
+
+
 
 /**
  * @brief Check the current location
@@ -17,6 +51,7 @@ void check_location(char *loc){
 
     }
 }
+
 
 /**
  * @brief Return the current directory
@@ -50,10 +85,12 @@ int main(){
         gets(com);  // read the command
 
         // return the string after ECHO command
-        if(strncmp(com, "ECHO", 5) == 0){
+        if(strncmp(com, "ECHO", 4) == 0){
             for(int i = 5 ; i < max_length && com[i] != '\0' ; i++){
-                printf("%c\n", com[i]);
+                printf("%c", com[i]);
             }
+            puts("\n");
+            
         }
 
         // return list of files in the directory
@@ -62,11 +99,11 @@ int main(){
         }
 
         else if(strcmp(com, "LOCAL") == 0){
-
+            dup2(123,1);
         }
         // need to complete
         else if(strncmp(com, "TCP PORT", 8) == 0){
-
+            client();
         }
 
         // if return 0 -> success

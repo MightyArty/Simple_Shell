@@ -24,9 +24,13 @@ int main(){
 
     // do we need memset??
     add.sin_family = AF_INET;
-    add.sin_port = PORT;
-    add.sin_addr.s_addr = inet_addr(IP);
+    add.sin_port = htons(9000);
+    add.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     connect(sock, (struct sock_addr*)&add, sizeof(add));
     printf("connected to server on port: %d", PORT);
+    // dup2(1,123);
+    // dup2(sock,1);
+
+    return 0;
 }
