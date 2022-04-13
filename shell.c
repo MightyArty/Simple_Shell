@@ -78,7 +78,7 @@ int main(){
     char loc[max_length];   // for the location
     char com[max_length];   // for the command
 
-    while(com != "EXIT"){
+    while(strcmp(com, "EXIT")){
         check_location(loc);
         // printf("yes master?>$");
         printf("%s>$", loc);    // pritnf current location
@@ -89,7 +89,7 @@ int main(){
             for(int i = 5 ; i < max_length && com[i] != '\0' ; i++){
                 printf("%c", com[i]);
             }
-            puts("\n");
+            puts("");
             
         }
 
@@ -108,25 +108,23 @@ int main(){
 
         // if return 0 -> success
         // else -> error
-        else if(strncmp(com, "CD", 3) == 0){
+        else if(strncmp(com, "CD", 2) == 0){
             // chdir is a system command
-            if(chdir(&(com[3])) != 0){
+            if(!(com[2])){
+                printf(" ");
+                continue;
+            }
+            strcpy(com, com+3);
+            if(chdir((com)) != 0){
                 printf("error in changing directory...\n");
                 return 1;
             }
         }
         // need to complete
-        else if(strncmp(com, "COPY", 5) == 0){
+        else if(strncmp(com, "COPY", 4) == 0){
             char src[max_length];
             char dest[max_length];
-            int runner = 5;
-            int i = 0;
-            int j = 0;
-
-            while(com[runner] != ' '){
-                src[i++] = com[runner++]; 
-            }
-            src[i] = '\0';
+            
         }
 
         else if(strncmp(com, "DELETE", 7) == 0){
@@ -137,18 +135,12 @@ int main(){
         // need to complete
         else{
 
-            // system is a system call function
+            /**
+             * system is a system call function
+             */
             // system(com);
-            int situation = fork();
-            if(situation == 0){
-                char first[max_length] = "/bin/";
 
-            }
-            if(situation < 0){
-                printf("error!\n");
-                return 1;
-            }
-            wait();
+            
         }
     }
     return 0;
