@@ -1,12 +1,5 @@
 #include "shell.h"
-void red()
-{
-    printf("\033[1;31m");
-}
-void yellow()
-{
-    printf("\033[1;33m");
-}
+
 void blue()
 {
     printf("\033[0;34m");
@@ -19,19 +12,7 @@ void purple()
 {
     printf("\033[0;35m");
 }
-void black()
-{
-    printf("\033[0;30m");
-    printf("\033[47m");
-}
-void cyan()
-{
-    printf("\033[0;36m");
-}
-void backround()
-{
-    printf("\033[43m");
-}
+
 void reset()
 {
     printf("\033[0m");

@@ -18,14 +18,9 @@ char loc[max_length]; // for the location
 char com[max_length]; // for the command
 int local_;
 int sock;
-void red();
-void yellow();
 void blue();
 void green();
 void purple();
-void black();
-void cyan();
-void backround();
 void reset();
 int run();
 void check_location(char *loc);
