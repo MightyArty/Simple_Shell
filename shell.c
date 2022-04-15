@@ -12,7 +12,6 @@ void purple()
 {
     printf("\033[0;35m");
 }
-
 void reset()
 {
     printf("\033[0m");
@@ -50,41 +49,15 @@ void welcom()
             blue();
     } while (logo[i]);
     reset();
-    puts("\n\n");
+    puts("\n");
 }
-/**
- * @brief Check the current location
- *
- * @param loc : current location
- */
 void check_location(char *loc)
 {
     if (getcwd(loc, max_length) == NULL)
     {
         printf("error in finding the location, check again later...\n");
     }
-    else
-    {
-        printf("%d\n", local_);
-        if (local_)
-        {
-            _local();
-            printf("%s>", loc);
-            blue();
-            printf("$ ");
-            dup2(1, 123);
-            dup2(sock, 1);
-            return;
-        }
-        printf("%s>", loc);
-        blue();
-        printf("$ ");
-    }
 }
-/**
-//  * @brief Return the current directory
-//  *
-//  */
 void get_dir()
 {
 
@@ -136,14 +109,9 @@ void split(char *comm)
     char *token;
     /* get the first token */
     token = strtok(comm, " ");
-    int i = 0;
-    while (*(token + i))
-    {
-        *(token + i) = toupper(*(token + i));
-        i++;
-    }
+
     /* walk through other tokens */
-    i = 0;
+    int i = 0;
     while (token != NULL)
     {
         comArr[i++] = token;
@@ -153,7 +121,9 @@ void split(char *comm)
 }
 int _local()
 {
+    puts("LOCAL");
     dup2(123, 1);
+    close(sock);
     local_ = 0;
     return 1;
 }
@@ -168,7 +138,7 @@ int _Echo()
 int _TCP()
 {
     local_ = (strcmp(comArr[1], "PORT") == 0) ? client() : -1;
-    if (local_)
+    if (local_ == 1)
     {
         dup2(1, 123);
         dup2(sock, 1);
@@ -182,8 +152,10 @@ int _Dir()
 }
 int _cd()
 {
+    // chdir is a system command
     if (chdir(comArr[1]) != 0)
     {
+
         printf("error in changing directory...\n");
         return -1;
     }
@@ -191,30 +163,50 @@ int _cd()
 }
 int _Delete()
 {
+    // our implemitation is using SYSTEM call
     unlink(comArr[1]);
     return 1;
 }
 int Exit()
 {
-    return 0;
+    exit(1);
+}
+void systemCall()
+{
+
+    // system(com);
+    pid_t pid = fork();
+    if (pid == -1)
+        printf("fork err\n");
+    else if (pid == 0)
+        if (execvp(comArr[0], comArr) == -1)
+            printf("Invaild Argument or commen\n");
+        else
+            waitpid(pid, NULL, 0);
 }
 int run()
 {
     int sys = 1;
     int ans = 1;
+    local_ = 0;
     while (ans)
     {
         sys = 1;
         green();
         check_location(loc);
-
-        gets(com);
+        printf("%s>", loc); // pritnf current location
+        blue();
+        printf("$ ");
+        gets(com); // read the command
         split(com);
         for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
         {
             if (strcasecmp(comArr[0], commands[i].comm) == 0)
             {
                 ans = commands[i].func_ptr();
+                if (ans == -1)
+                    puts("Error");
+                ans = 1;
                 sys = 0;
             }
         }
@@ -222,7 +214,9 @@ int run()
          * system is a system call function
          */
         if (sys)
-            system(com);
+        {
+            systemCall();
+        }
     }
     return 1;
 }

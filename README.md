@@ -1,6 +1,8 @@
 # Simple_Shell
 First assigment in Operating Systems course
 
+![alt](img.png)
+
 ## Running Programm:
 ```bash
 # Clone the repository

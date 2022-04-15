@@ -20,7 +20,7 @@ int client()
     if (status == -1)
     {
         printf("Connection error...\n");
-        return status;
+        return -1;
     }
     printf("connected to server on port: %d", add.sin_port);
     

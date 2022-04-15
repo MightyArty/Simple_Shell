@@ -76,6 +76,13 @@ int main()
         }
         else
         {
+            if(strncmp(buff,"LOCAL",5)==0){
+                close(sock_server);
+                return 0;
+
+            }
+                
+
             for (int i = 0; i < BUFF_SIZE; i++)
             {
                 printf("%c", buff[i]);

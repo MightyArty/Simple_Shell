@@ -8,6 +8,8 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <sys/socket.h> 
+#include <sys/types.h>
 
 #define max_length 256
 #define max_comm 1024
@@ -22,19 +24,40 @@ void blue();
 void green();
 void purple();
 void reset();
+
 int run();
+/**
+ * @brief Check the current location
+ *
+ * @param loc : current location
+ */
 void check_location(char *loc);
+/**
+//  * @brief Return the current directory
+//  *
+//  */
 void get_dir();
 int _local();
+/**
+//  * @brief return the string after ECHO command
+//  *
+//  */
 int _Echo();
 int _TCP();
+/**
+//  * @brief return list of files in the directory
+//  *
+//  */
 int _Dir();
 int _cd();
 int _copy();
 int _Delete();
 int Exit();
 int client();
+void systemCall();
 void split(char *comm);
+#ifndef __commands_H__
+#define __commands_H__
 static struct commands
 {
     const char *comm;
@@ -49,4 +72,5 @@ static struct commands
     {"COPY", _copy},
     {"EXIT", Exit},
 };
+#endif
 void welcom();
