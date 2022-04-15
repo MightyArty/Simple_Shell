@@ -12,5 +12,5 @@ $ cd Simple_Shell
 # Open the terminal on Linux
 $ Run "make"
 $ Run Server "make run"
-$ Run Shell "make cmd"V
+$ Run Shell "make cmd"
 ```

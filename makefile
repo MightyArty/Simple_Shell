@@ -4,11 +4,11 @@ CC = gcc #if we want to change compiler
 
 all: simpleShell server
 
-simpleShell:shell.o libclass.a 
-	$(CC) $(FLAGS) -o simpleShell shell.o libclass.a
+simpleShell:main.o libclass.a 
+	$(CC) $(FLAGS) -o simpleShell main.o libclass.a
 
-shell.o: shell.c shell.h
-	$(CC) $(FLAGS) -c shell.c 
+main.o: main.c shell.h
+	$(CC) $(FLAGS) -c main.c 
 
 libclass.a:client.o
 	ar -rcs libclass.a client.o
