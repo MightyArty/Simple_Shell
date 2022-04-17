@@ -23,7 +23,7 @@ void welcom()
                     "          SH//////YS           shell//Sh   |A@@I|", "    | Welcome to simple shell\n",
                     " Sim aSystemSH//Sh              sys//B     |R$$M|", "    | Version 1.0\n",
                     " ArtABBBaraKk///Sh               sM//E     |A^^P|", "    |\n",
-                    "         pCCCCY//h          eSS@@ y//E     |K**L|", "    | https://github.com/\n",
+                    "         pCCCCY//h          eSS@@ y//E     |K**L|", "    | https://github.com/MightyArty\n",
                     "         SPPPP///a          pP///AC//E     |&&&E|", "    |\n",
                     "              A//A            smP////S     |A**S|", "    | Have fun!\n",
                     "              p///Ac            sE///a     |R##H|", "    |\n",
@@ -104,12 +104,13 @@ int _copy()
     fclose(target);
     return 1;
 }
-void split(char *comm)
+int split(char *comm)
 {
+    if (strlen(com) == 0)
+        return 0;
     char *token;
     /* get the first token */
     token = strtok(comm, " ");
-
     /* walk through other tokens */
     int i = 0;
     while (token != NULL)
@@ -118,6 +119,7 @@ void split(char *comm)
         token = strtok(NULL, " ");
     }
     comArr[i] = NULL;
+    return 1;
 }
 int _local()
 {
@@ -132,7 +134,6 @@ int _Echo()
     int i = 0;
     while (comArr[++i] != NULL)
         printf("%s ", comArr[i]);
-    puts("");
     return 1;
 }
 int _TCP()
@@ -177,15 +178,30 @@ void systemCall()
     // system(com);
     pid_t pid = fork();
     if (pid == -1)
+    {
         printf("fork err\n");
-    else if (pid == 0)
+        return;
+    }
+    if (pid == 0)
+    {
         if (execvp(comArr[0], comArr) == -1)
             printf("Invaild Argument or commen\n");
         else
             waitpid(pid, NULL, 0);
+    }
 }
 int run()
 {
+    commands commandsA[] = {
+        {"ECHO", _Echo},
+        {"DIR", _Dir},
+        {"LOCAL", _local},
+        {"DELETE", _Delete},
+        {"CD", _cd},
+        {"TCP", _TCP},
+        {"COPY", _copy},
+        {"EXIT", Exit},
+    };
     int sys = 1;
     int ans = 1;
     local_ = 0;
@@ -197,13 +213,14 @@ int run()
         printf("%s>", loc); // pritnf current location
         blue();
         printf("$ ");
-        gets(com); // read the command
-        split(com);
-        for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
+        fgets(com, sizeof(com), stdin);
+        if (!split(com))
+            continue;
+        for (int i = 0; i < sizeof(commandsA) / sizeof(commandsA[0]); i++)
         {
-            if (strcasecmp(comArr[0], commands[i].comm) == 0)
+            if (strcasecmp(comArr[0], commandsA[i].comm) == 0)
             {
-                ans = commands[i].func_ptr();
+                ans = commandsA[i].func_ptr();
                 if (ans == -1)
                     puts("Error");
                 ans = 1;

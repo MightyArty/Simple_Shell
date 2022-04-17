@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>
@@ -8,8 +9,9 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
-#include <sys/socket.h> 
+#include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #define max_length 256
 #define max_comm 1024
@@ -55,22 +57,13 @@ int _Delete();
 int Exit();
 int client();
 void systemCall();
-void split(char *comm);
+int split(char *comm);
 #ifndef __commands_H__
 #define __commands_H__
-static struct commands
+typedef struct commands
 {
     const char *comm;
     const int (*func_ptr)();
-} commands[] = {
-    {"ECHO", _Echo},
-    {"DIR", _Dir},
-    {"LOCAL", _local},
-    {"DELETE", _Delete},
-    {"CD", _cd},
-    {"TCP", _TCP},
-    {"COPY", _copy},
-    {"EXIT", Exit},
-};
+} commands;
 #endif
 void welcom();
